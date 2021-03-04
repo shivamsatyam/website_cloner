@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from colorama import Fore,Back,Style,init
 import urllib.request
 import time
+import webbrowser
 
 init(convert=True)
 print(Fore.GREEN)
@@ -15,14 +16,29 @@ os.mkdir('shivam_cracker')
 os.chdir('shivam_cracker')
 directory  = os.getcwd()
 
+all_the_css_downloads = []
+
 def main():
+	css_checker = 0
 	try:
-		url = str(input("Enter the url of the website add https of https also \n"))
+		url = str(input("Enter the url of the website add https or https also \n"))
+		url_split = url.split()
+		last_index = url_split[len(url_split)-1]
+		if last_index == '/':
+			url  = url [0:len(url)-1]
+
 		os.mkdir('img')
 
 		print(Fore.RED + "Started encoding\n")
 
 
+		print(" | |      | | _______")
+		print(" | |      | |     |")
+		print(" | |      | |     |")
+		print(" | |      | |     |")
+		print(" | |______| |     |")
+		print(" |__________| _______")
+	
 
 
 		time.sleep(2)
@@ -70,8 +86,7 @@ def main():
 				pass
 
 
-		print(all_the_css_links)
-		print(all_the_js_links)
+		
 
 
 		all_the_image_links = []
@@ -81,8 +96,11 @@ def main():
 				all_the_image_links.append(i['src'])
 			except Exception as e:
 				pass
-
-
+		print('\n\n\n\n')
+		print(all_the_css_links)
+		print(all_the_js_links)
+		print(all_the_image_links)		
+		print('\n\n\n\n')
 
 		# def dl_jpg(url,file_path,file_name):
 		#     full_path = file_path + file_name + '.jpg'
@@ -93,6 +111,28 @@ def main():
 		# file_name = input("Enter the name of file")    
 
 		# dl_jpg(url,'img/',file_name)
+
+
+		def file_exist_in_css(name):
+			try:
+				name = name.split('/')
+			except Exception as e:
+				name = name.split('//')
+
+			name = str(name[len(name)-1])
+			print(f"the css file name is {name}")	
+			for item in os.listdir():
+				print(f"the name of the item is {item}")
+				if str(item) == name:
+					print("The name is found")
+
+					break
+					return 0
+				else:
+					css_checker = 1
+					print("The name is not found")
+					return 1
+				return 1	
 
 		def image_downloader(a):
 			for item in a:
@@ -122,34 +162,45 @@ def main():
 
 		os.mkdir('css')
 		def saving_to_css_folder(a):
+			print(Fore.CYAN + "downloading css file ")
 			os.chdir("css")
 			for item in a:
-				
-				
-				split_item = item.split('.') 
-				last_item = split_item[len(split_item)-1]
+				print(f"\n\n\n\n\n the resul is {file_exist_in_css(item)}  {css_checker} \n\n\n\n\n\n")
+				check_download = 0
 
-				if ("https" in item) or ("http" in item):
-					pass
+				if (2>1):
 
-				elif last_item == 'css':
-					 try:
-					 	name_item_list = item.split('/')
-					 except Exception as e:
-					 	name_item_list = item.split('//')
-					 
-					 name_item =  url + '/' + name_item_list[len(name_item_list)-1]	
-					 
-					   
-					 text = requests.get(url + '/' + item).text
-					 print(Fore.CYAN + "downloading css file ")
-					 print(f"{url + '/' + item} downloaded Successfully \n")
-					 # print(text)
-					 file_name =str(name_item_list[len(name_item_list)-1])
-					 with open (file_name,'w') as op:
-					 	op.write(str(text))
-				else:
-					pass	 	
+					split_item = item.split('.') 
+					last_item = split_item[len(split_item)-1]
+
+					if ("https" in item) or ("http" in item):
+						pass
+
+					elif last_item == 'css':
+						 
+						 try:
+						 	name_item_list = item.split('/')
+						 except Exception as e:
+						 	name_item_list = item.split('//')
+						 
+						 name_item =  url + '/' + name_item_list[len(name_item_list)-1]	
+						 file_name =str(name_item_list[len(name_item_list)-1])
+
+						 
+						 check_download = 1
+
+						 if check_download == 1:    	    
+							 text = requests.get(url + '/' + item).text
+								     
+							 print(f"{url + '/' + item} downloaded Successfully \n")
+							 all_the_css_downloads.append(file_name)
+							 # print(text)
+							 
+							 with open (file_name,'w') as op:
+								         
+							     op.write(str(text))
+					else:
+						pass	 	
 
 			os.chdir(directory)		 	
 			print(os.getcwd())
@@ -176,13 +227,18 @@ def main():
 
 
 
-					name_of_the_file = name_item_list[len(name_item_list)-1]	 	
+					name_of_the_file = str(name_item_list[len(name_item_list)-1])	 	
 					
 					text = requests.get(url + '/' + item).text		
 					print(Fore.YELLOW + "Downloading js files\n")
 					print(f"{url + '/' + item} donwloaded \n")
-					with open(str(name_of_the_file),'w') as op:
-						op.write(text)
+					print(text[0:230])
+					text = str(text).encode('utf-8')
+					print("name of the file ",name_of_the_file)
+					with open(name_of_the_file,'w') as op:
+						op.write(str(text))
+					# with open(name_of_the_file,'a') as op:
+					# 	op.append(text)	
 				else:
 					pass	
 
@@ -221,16 +277,20 @@ def main():
 			elif string[0]=='#':
 				return False	
 			elif first_letter == '/':
-				return False	
+				return True	
 			else:
 				return True	
 
 		def anchor_tag_finder(all_the_anchor_tags):		
 			for item in all_the_anchor_tags:
 			    if check_for_on_page_anchor(item):
+			        
+				    
 				    split_item = item.split('/')
+				    print("\n\nRedirecting to the anchor page\n\n\n\n")
 				    name_of_the_page = split_item[len(split_item)-1]
-				    text_main = requests.get(url + name_of_the_page)
+				    print(f"\n\nName of the page is {name_of_the_page}\n\n\n")
+				    text_main = requests.get(url +item)
 				    print(f"\n\n {url + '/' + name_of_the_page} \n\n\n")
 				    text = text_main.text
 				    soup = BeautifulSoup(text_main.content,'html.parser')
@@ -273,8 +333,16 @@ def main():
 
 
 		anchor_tag_finder(all_the_anchor_tags)
+
+		# webbrowser.open(directory + '/shivam_cracker')
+
 	except Exception as q:
-		pass	
+	    with open('error.txt','w') as op:
+		    op.write(str(q))
+	    print(q)
+	    print(Fore.RED + "Some error occured\n")
+	    print("Please check the network connection or delete the shivam_cracker folder from the directory\n")
+				
 
 
 main()
